@@ -36,6 +36,8 @@ def log_in():
 def register():
   usuario = db.users.find_one({'email': request.form['email']})
   if usuario:
+    return jsonify({'error': 'El usuario ya existe.'})
+  else:
     id = db.usuarios.insert({
       'nombre': request.form['nombre'],
       'email': request.form['email'],
@@ -46,8 +48,6 @@ def register():
       'nombre': request.form['nombre'],
       'email': request.form['email'],
     })
-  else:
-    return jsonify({'error': 'El usuario ya existe.'})
 
 # Routes: articulos
 @app.route('/articulos', methods=['POST'])
