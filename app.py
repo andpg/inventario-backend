@@ -19,7 +19,7 @@ db = mongo.inventario
 # Routes: sesiones de usuario
 @app.route('/login', methods=['POST'])
 def log_in():
-  usuario = db.users.find_one({
+  usuario = db.usuarios.find_one({
     'email': request.form['email'],
     'contraseña': request.form['contraseña']
   })
@@ -34,7 +34,7 @@ def log_in():
 
 @app.route('/register', methods=['POST'])
 def register():
-  usuario = db.users.find_one({'email': request.form['email']})
+  usuario = db.usuarios.find_one({'email': request.form['email']})
   if usuario:
     return jsonify({'error': 'El usuario ya existe.'})
   else:
