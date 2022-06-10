@@ -1,15 +1,14 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from dotenv import dotenv_values
+from os import environ
 from pymongo import MongoClient
 from bson import ObjectId
 from datetime import datetime
 from random import randint
 
 # Instantiation
-env = dotenv_values()
 app = Flask(__name__)
-mongo = MongoClient(env['MONGO_URI'])
+mongo = MongoClient(environ['MONGO_URI'])
 
 # Settings
 CORS(app)
