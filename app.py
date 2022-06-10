@@ -66,7 +66,7 @@ def get_articulos():
     'nombre': articulo['nombre'],
     'categoría': articulo['categoría'],
     'cantidad': articulo['cantidad']
-  } for articulo in db.articles.find()])
+  } for articulo in db.articulos.find()])
 
 @app.route('/articulos/<id>', methods=['GET'])
 def get_articulo(id):
