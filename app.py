@@ -3,6 +3,8 @@ from flask_cors import CORS
 from dotenv import dotenv_values
 from pymongo import MongoClient
 from bson import ObjectId
+from datetime import datetime
+from random import randint
 
 # Instantiation
 env = dotenv_values()
@@ -15,7 +17,7 @@ CORS(app)
 # Database
 db = mongo.inventario
 
-# Routes: usuario sessions
+# Routes: sesiones de usuario
 @app.route('/login', methods=['POST'])
 def log_in():
   usuario = db.users.find_one({
@@ -48,7 +50,7 @@ def register():
   else:
     return jsonify({'error': 'El usuario ya existe.'})
 
-# Routes: inventory articulos
+# Routes: articulos
 @app.route('/articulos', methods=['POST'])
 def create_articulo():
   id = db.articulos.insert({
@@ -101,14 +103,19 @@ def sell_articulo(id):
   }})
   return jsonify(str(ObjectId(id)))
 
-# Routes: pedidoing
+# Routes: pedidos
 @app.route('/pedidos', methods=['POST'])
-def pedido_articulo():
+def pedir_articulo():
+  articulo = get_articulo(request.form['id_articulo'])
   id = db.pedidos.insert({
     'id_articulo': ObjectId(request.form['id_articulo']),
     'proveedor': request.form['proveedor'],
     'cantidad': request.form['cantidad'],
-    'fecha': request.form['fecha']
+    'fecha': datetime.utcnow(),
+    'entrega': {
+      'fecha': datetime.utcnow(),
+      'cantidad': randint(articulo['cantidad'] * 0.8, articulo['cantidad'] * 1.2)
+    }
   })
   return jsonify(str(ObjectId(id)))
 
@@ -144,4 +151,4 @@ def cancel_pedido(id):
   return jsonify({'mensaje': 'El artículo fue eliminado.'})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
