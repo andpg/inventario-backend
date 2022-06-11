@@ -70,7 +70,7 @@ def get_articulos():
 
 @app.route('/articulos/<id>', methods=['GET'])
 def get_articulo(id):
-  articulo = db.articles.find_one({'_id': ObjectId(id)})
+  articulo = db.articulos.find_one({'_id': ObjectId(id)})
   if articulo:
     return jsonify({
       '_id': str(ObjectId(articulo['_id'])),
@@ -97,8 +97,10 @@ def edit_articulo(id):
 
 @app.route('/articulos/<id>/vender', methods=['POST'])
 def sell_articulo(id):
-  articulo = db.articles.find_one({'_id': ObjectId(id)})
-  if request.form['cantidad'] > articulo['cantidad']:
+  articulo = db.articulos.find_one({'_id': ObjectId(id)})
+  if not articulo:
+    return jsonify({'error': 'El artículo no existe.'})
+  elif request.form['cantidad'] > articulo['cantidad']:
     return jsonify({'error': 'No hay suficientes artículos de ${articulo.nombre}'})
   else:
     db.articulos.update_one({'_id': ObjectId(id)}, {"$inc": {
