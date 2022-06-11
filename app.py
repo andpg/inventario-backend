@@ -57,7 +57,7 @@ def create_articulo():
     'categoría': request.form['categoría'],
     'cantidad': 0
   })
-  return jsonify(str(ObjectId(id)))
+  return jsonify({'_id': str(ObjectId(id))})
 
 @app.route('/articulos', methods=['GET'])
 def get_articulos():
@@ -93,7 +93,7 @@ def edit_articulo(id):
     'nombre': request.form['nombre'],
     'categoría': request.form['categoría']
   }})
-  return jsonify(str(ObjectId(id)))
+  return jsonify({'_id': str(ObjectId(id))})
 
 @app.route('/articulos/<id>/vender', methods=['POST'])
 def sell_articulo(id):
@@ -104,7 +104,7 @@ def sell_articulo(id):
     db.articulos.update_one({'_id': ObjectId(id)}, {"$inc": {
       'cantidad': - request.form['cantidad']
     }})
-    return jsonify(str(ObjectId(id)))
+    return jsonify({'_id': str(ObjectId(id))})
 
 # Routes: pedidos
 @app.route('/pedidos', methods=['POST'])
@@ -119,7 +119,7 @@ def pedir_articulo():
       'cantidad': randint(articulo['cantidad'] * 0.8, articulo['cantidad'] * 1.2)
     }
   })
-  return jsonify(str(ObjectId(id)))
+  return jsonify({'_id': str(ObjectId(id))})
 
 @app.route('/pedidos', methods=['GET'])
 def get_pedidos():
