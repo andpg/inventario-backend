@@ -101,7 +101,7 @@ def sell_articulo(id):
   if not articulo:
     return jsonify({'error': 'El artículo no existe.'})
   elif int(request.form['cantidad']) > articulo['cantidad']:
-    return jsonify({'error': 'No hay suficientes artículos de ${articulo.nombre}'})
+    return jsonify({'error': 'No hay suficientes artículos de ${articulo["nombre"]}'})
   else:
     db.articulos.update_one({'_id': ObjectId(id)}, {"$inc": {
       'cantidad': - int(request.form['cantidad'])
