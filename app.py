@@ -111,17 +111,21 @@ def sell_articulo(id):
 # Routes: pedidos
 @app.route('/pedidos', methods=['POST'])
 def pedir_articulo():
-  id = db.pedidos.insert({
-    'id_articulo': ObjectId(request.form['id_articulo']),
-    'proveedor': request.form['proveedor'],
-    'cantidad': int(request.form['cantidad']),
-    'fecha': datetime.utcnow(),
-    'entrega': {
+  articulo = db.articulos.find_one({'_id': ObjectId(request.form['id_articulo'])})
+  if articulo:
+    id = db.pedidos.insert({
+      'id_articulo': ObjectId(request.form['id_articulo']),
+      'proveedor': request.form['proveedor'],
+      'cantidad': int(request.form['cantidad']),
       'fecha': datetime.utcnow(),
-      'cantidad': randint(articulo['cantidad'] * 0.8, articulo['cantidad'] * 1.2)
-    }
-  })
-  return jsonify({'_id': str(ObjectId(id))})
+      'entrega': {
+        'fecha': datetime.utcnow(),
+        'cantidad': randint(articulo['cantidad'] * 0.8, articulo['cantidad'] * 1.2)
+      }
+    })
+    return jsonify({'_id': str(ObjectId(id))})
+  else:
+    return jsonify({'error': 'El artículo no existe.'})
 
 @app.route('/pedidos', methods=['GET'])
 def get_pedidos():
