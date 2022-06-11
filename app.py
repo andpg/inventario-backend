@@ -140,11 +140,11 @@ def get_pedidos():
     'cantidad': pedido['cantidad'],
     'fecha': pedido['fecha'],
     'entrega': pedido['entrega']
-  } for pedido in db.orders.find()])
+  } for pedido in db.pedidos.find()])
 
 @app.route('/pedidos/<id>', methods=['GET'])
 def get_pedido(id):
-  pedido = db.orders.find_one({'_id': ObjectId(id)})
+  pedido = db.pedidos.find_one({'_id': ObjectId(id)})
   if pedido:
     return jsonify({
       '_id': str(ObjectId(pedido['_id'])),
