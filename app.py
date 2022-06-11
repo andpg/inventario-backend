@@ -120,7 +120,7 @@ def pedir_articulo():
       'fecha': datetime.utcnow(),
       'entrega': {
         'fecha': datetime.utcnow(),
-        'cantidad': randint(articulo['cantidad'] * 0.8, articulo['cantidad'] * 1.2)
+        'cantidad': randint(int(request.form['cantidad']) * 0.8, int(request.form['cantidad']) * 1.2)
       }
     })
     db.articulos.update_one({'_id': ObjectId(id)}, {"$inc": {
