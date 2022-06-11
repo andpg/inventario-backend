@@ -30,13 +30,13 @@ def log_in():
       'email': usuario['email'],
     })
   else:
-    return jsonify({'error': 'El usuario no existe.'})
+    return jsonify({'error': 'Correo o contraseña equivocados.'})
 
 @app.route('/register', methods=['POST'])
 def register():
   usuario = db.usuarios.find_one({'email': request.form['email']})
   if usuario:
-    return jsonify({'error': 'El usuario ya existe.'})
+    return jsonify({'error': 'Correo ya registrado.'})
   else:
     id = db.usuarios.insert({
       'nombre': request.form['nombre'],
@@ -95,17 +95,20 @@ def edit_articulo(id):
   }})
   return jsonify(str(ObjectId(id)))
 
-@app.route('/articulos/<id>/sell', methods=['POST'])
+@app.route('/articulos/<id>/vender', methods=['POST'])
 def sell_articulo(id):
-  db.articulos.update_one({'_id': ObjectId(id)}, {"$inc": {
-    'cantidad': - request.form['cantidad']
-  }})
-  return jsonify(str(ObjectId(id)))
+  articulo = db.articles.find_one({'_id': ObjectId(id)})
+  if request.form['cantidad'] > articulo['cantidad']:
+    return jsonify({'error': 'No hay suficientes artículos de ${articulo.nombre}'})
+  else:
+    db.articulos.update_one({'_id': ObjectId(id)}, {"$inc": {
+      'cantidad': - request.form['cantidad']
+    }})
+    return jsonify(str(ObjectId(id)))
 
 # Routes: pedidos
 @app.route('/pedidos', methods=['POST'])
 def pedir_articulo():
-  articulo = get_articulo(request.form['id_articulo'])
   id = db.pedidos.insert({
     'id_articulo': ObjectId(request.form['id_articulo']),
     'proveedor': request.form['proveedor'],
