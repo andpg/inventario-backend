@@ -100,11 +100,11 @@ def sell_articulo(id):
   articulo = db.articulos.find_one({'_id': ObjectId(id)})
   if not articulo:
     return jsonify({'error': 'El artículo no existe.'})
-  elif request.form['cantidad'] > articulo['cantidad']:
+  elif int(request.form['cantidad']) > articulo['cantidad']:
     return jsonify({'error': 'No hay suficientes artículos de ${articulo.nombre}'})
   else:
     db.articulos.update_one({'_id': ObjectId(id)}, {"$inc": {
-      'cantidad': - request.form['cantidad']
+      'cantidad': - int(request.form['cantidad'])
     }})
     return jsonify({'_id': str(ObjectId(id))})
 
@@ -114,7 +114,7 @@ def pedir_articulo():
   id = db.pedidos.insert({
     'id_articulo': ObjectId(request.form['id_articulo']),
     'proveedor': request.form['proveedor'],
-    'cantidad': request.form['cantidad'],
+    'cantidad': int(request.form['cantidad']),
     'fecha': datetime.utcnow(),
     'entrega': {
       'fecha': datetime.utcnow(),
