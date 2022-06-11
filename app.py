@@ -115,6 +115,7 @@ def pedir_articulo():
   if articulo:
     id = db.pedidos.insert({
       'id_articulo': ObjectId(request.form['id_articulo']),
+      'articulo': articulo['nombre'],
       'proveedor': request.form['proveedor'],
       'cantidad': int(request.form['cantidad']),
       'fecha': datetime.utcnow(),
@@ -136,6 +137,7 @@ def get_pedidos():
   return jsonify([{
     '_id': str(ObjectId(pedido['_id'])),
     'id_articulo': str(ObjectId(pedido['id_articulo'])),
+    'articulo': pedido['articulo'],
     'proveedor': pedido['proveedor'],
     'cantidad': pedido['cantidad'],
     'fecha': pedido['fecha'],
@@ -149,6 +151,7 @@ def get_pedido(id):
     return jsonify({
       '_id': str(ObjectId(pedido['_id'])),
       'id_articulo': str(ObjectId(pedido['id_articulo'])),
+      'articulo': pedido['articulo'],
       'proveedor': pedido['proveedor'],
       'cantidad': pedido['cantidad'],
       'fecha': pedido['fecha'],
