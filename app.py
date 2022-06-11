@@ -123,8 +123,9 @@ def pedir_articulo():
         'cantidad': randint(int(request.form['cantidad']) * 0.8, int(request.form['cantidad']) * 1.2)
       }
     })
-    db.articulos.update_one({'_id': ObjectId(id)}, {"$inc": {
-      'cantidad': db.pedidos.find_one({'_id': ObjectId(id)})['entrega']['cantidad']
+    pedido = db.pedidos.find_one({'_id': ObjectId(id)})
+    db.articulos.update_one({'_id': ObjectId(pedido['id_articulo'])}, {"$inc": {
+      'cantidad': pedido['entrega']['cantidad']
     }})
     return jsonify({'_id': str(ObjectId(id))})
   else:
